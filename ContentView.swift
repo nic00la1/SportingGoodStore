@@ -13,7 +13,7 @@ struct ContentView: View {
         Ball(name: "Football", price: 7.77, image: "football.fill", color: .brown),
         Ball(name: "Basketball", price: 10.33, image: "basketball.fill", color: .orange),
         Ball(name: "Baseball", price: 3.99, image: "baseball", color: .red),
-        Ball(name: "Soccer Ball", price: 5.99, image: "socerball", color: .indigo),
+        Ball(name: "Soccer Ball", price: 5.99, image: "soccerball", color: .indigo),
         Ball(name: "Volleyball", price: 7.77, image: "volleyball", color: .gray),
         Ball(name: "Tennis Ball", price: 1.99, image: "volleyball.fill", color: .gray),
         Ball(name: "Tennis Ball", price: 1.99, image: "tennisball.fill", color: .green)
@@ -30,6 +30,34 @@ struct ContentView: View {
                     ForEach($balls.filter { $0.favourite.wrappedValue }) { $ball in
                         ballView(ball: $ball)
                         
+                    }
+                }
+                
+                // Section for the rest of the balls
+                Section(header: Text("Merchandise")) {
+                    ForEach($balls.filter { !$0.favourite.wrappedValue }) { $ball in
+                        ballView(ball: $ball)
+                    }
+                }
+                
+                // Section for purchased balls
+                Section(header: Text("Purchased")) {
+                    ForEach($balls) { $ball in
+                        if ball.purchasedCount > 0 {
+                            HStack {
+                                Image(systemName: ball.image)
+                                    .foregroundStyle(ball.color)
+                                    .font(.title2)
+                                Text("\(ball.name)s")
+                                    .fontWeight(.semibold)
+                                
+                                Spacer()
+                                
+                                Text("\(ball.purchasedCount)")
+                                    .fontWeight(.bold)
+                                    .contentTransition(.numericText())
+                            }
+                        }
                     }
                 }
             }
