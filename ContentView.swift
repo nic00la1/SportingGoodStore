@@ -69,6 +69,36 @@ struct ContentView: View {
     }
 }
 
+struct PurchasedTip: Tip {
+    var title: Text {
+        Text("Purchased Items")
+    }
+    var message: Text? {
+        Text("Purchased items will be displayed here")
+    }
+    var image: Image? {
+        Image(systemName: "bag")
+    }
+}
+
+struct FavouriteTip: Tip {
+    var rules: [Rule] {
+        #Rule(ContentView.itemsHaveBeenPurchased) {
+            $0.donations.count >= 3
+        }
+    }
+    
+    var title: Text {
+        Text("Favourite")
+    }
+    var message: Text? {
+        Text("Tap the star to mark an item as a favourite")
+    }
+    var image: Image? {
+        Image(systemName: "star")
+    }
+}
+
 #Preview {
     ContentView()
 }
