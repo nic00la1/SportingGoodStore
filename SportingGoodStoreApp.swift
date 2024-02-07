@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 @main
 struct SportingGoodStoreApp: App {
@@ -13,5 +14,9 @@ struct SportingGoodStoreApp: App {
         WindowGroup {
             ContentView()
         }
+    }
+    
+    init() {
+        try? Tips.configure()
     }
 }
