@@ -21,6 +21,9 @@ struct ContentView: View {
     
     static let itemsHaveBeenPurchased = Tips.Event(id: "itemsHaveBeenPurchased")
     
+    let purchasedTip = PurchasedTip()
+    let favouriteTip = FavouriteTip()
+    
     
     var body: some View {
         NavigationStack {
@@ -42,6 +45,9 @@ struct ContentView: View {
                 
                 // Section for purchased balls
                 Section(header: Text("Purchased")) {
+                    
+                    TipView(purchasedTip)
+                    
                     ForEach($balls) { $ball in
                         if ball.purchasedCount > 0 {
                             HStack {
@@ -61,6 +67,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationTitle("Sporting Goods")
         }
     }
     
@@ -71,14 +78,18 @@ struct ContentView: View {
             Image(systemName: ball.wrappedValue.image)
                 .foregroundStyle(ball.wrappedValue.color)
                 .font(.title2)
+            Text("\(ball.wrappedValue.name):")
+                .fontWeight(.semibold)
             Text("\(ball.wrappedValue.price.formatted(.number.precision(.fractionLength(2))))")
             Image( systemName: ball.wrappedValue.favourite ? "star.fill" : "star")
                 .foregroundStyle(.yellow)
                 .font(.title2)
                 .contentTransition(.symbolEffect(.replace))
+                .popoverTip(favouriteTip)
                 .onTapGesture {
                     withAnimation {
                         ball.favourite.wrappedValue.toggle()
+                        favouriteTip.invalidate(reason: .actionPerformed)
                     }
                 }
             Spacer()
@@ -86,6 +97,7 @@ struct ContentView: View {
                 withAnimation {
                     ball.purchasedCount.wrappedValue += 1
                 }
+                purchasedTip.invalidate(reason: .actionPerformed)
                 Self.itemsHaveBeenPurchased.sendDonation()
             }, label: {
                 Text("Buy")
